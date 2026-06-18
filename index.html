@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জুয়েলারি পস (POS) এবং মেমো</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 10px; background-color: #f4f4f9; padding-bottom: 50px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2, h3 { text-align: center; color: #333; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; margin-top: 15px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .memo-list { margin-top: 20px; }
+        .memo-card { background: #fff; padding: 10px; margin-bottom: 10px; border-left: 5px solid #007bff; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>জুয়েলারি পস (POS)</h2>
+    
+    <label>গ্রাহকের নাম:</label>
+    <input type="text" id="customerName" placeholder="নাম লিখুন">
+
+    <label>পণ্যের বিবরণ:</label>
+    <input type="text" id="itemName" placeholder="যেমন: স্বর্ণের চেইন">
+
+    <label>ওজন (ভরি/আনা/রতি):</label>
+    <input type="text" id="weight" placeholder="যেমন: ১ ভরি ২ আনা">
+
+    <label>মোট মূল্য (টাকা):</label>
+    <input type="number" id="totalAmount" placeholder="0.00">
+
+    <button onclick="saveMemo()">মেমো সেভ করুন</button>
+
+    <h3>সংরক্ষিত মেমো সমূহ (চিরস্থায়ী)</h3>
+    <div id="memoContainer" class="memo-list">লোড হচ্ছে...</div>
+</div>
+
+<script>
+    // আপনার ফায়ারবেজ ডাটাবেজ লিংক এখানে যুক্ত করা হয়েছে
+    const databaseURL = "https://firebaseio.com";
+
+    // ডাটা সেভ করার ফাংশন
+    async function saveMemo() {
+        const name = document.getElementById('customerName').value;
+        const item = document.getElementById('itemName').value;
+        const weight = document.getElementById('weight').value;
+        const amount = document.getElementById('totalAmount').value;
+
+        if(!name || !item || !amount) {
+            alert("অনুগ্রহ করে সব তথ্য পূরণ করুন!");
+            return;
+        }
+
+        const memoData = {
+            customerName: name,
+            itemName: item,
+            weight: weight,
+            totalAmount: amount,
+            date: new Date().toLocaleString('bn-BD')
+        };
+
+        try {
+            await fetch(databaseURL, {
+                method: 'POST',
+                body: JSON.stringify(memoData)
+            });
+            alert("মেমো সফলভাবে ডাটাবেজে সেভ হয়েছে!");
+            // ইনপুট ফিল্ড খালি করা
+            document.getElementById('customerName').value = '';
+            document.getElementById('itemName').value = '';
+            document.getElementById('weight').value = '';
+            document.getElementById('totalAmount').value = '';
+            loadMemos(); // লিস্ট আপডেট করা
+        } catch (error) {
+            alert("ডাটা সেভ করতে সমস্যা হয়েছে। ইন্টারনেট কানেকশন চেক করুন।");
+        }
+    }
+
+    // ডাটাবেজ থেকে ডাটা এনে দেখানোর ফাংশন
+    async function loadMemos() {
+        const container = document.getElementById('memoContainer');
+        try {
+            const response = await fetch(databaseURL);
+            const data = await response.json();
+            container.innerHTML = "";
+            
+            if (!data) {
+                container.innerHTML = "<p style='text-align:center;'>কোনো মেমো পাওয়া যায়নি।</p>";
+                return;
+            }
+
+            Object.keys(data).reverse().forEach(key => {
+                const memo = data[key];
+                container.innerHTML += `
+                    <div class="memo-card">
+                        <p><strong>তারিখ:</strong> ${memo.date}</p>
+                        <p><strong>গ্রাহক:</strong> ${memo.customerName}</p>
+                        <p><strong>পণ্য:</strong> ${memo.itemName} (${memo.weight || 'ওজন নেই'})</p>
+                        <p><strong>মোট মূল্য:</strong> ${memo.totalAmount} টাকা</p>
+                    </div>
+                `;
+            });
+        } catch (error) {
+            container.innerHTML = "<p style='color:red;'>ডাটা লোড করা যাচ্ছে না।</p>";
+        }
+    }
+
+    // অ্যাপ চালু হলেই মেমো লোড হবে
+    loadMemos();
+</script>
+
+</body>
+</html>

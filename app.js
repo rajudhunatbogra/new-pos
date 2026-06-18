@@ -1,4 +1,5 @@
-const databaseURL = "https://firebaseio.com";
+const databaseURL = "https://jewelarry-24f04-default-rtdb.firebaseio.com/";
+
 
 // ডাটা সেভ করার ফাংশন
 async function saveMemo() {

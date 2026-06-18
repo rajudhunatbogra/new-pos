@@ -40,7 +40,7 @@
 </div>
 
 <script>
-    // আপনার ফায়ারবেজ ডাটাবেজ লিংক এখানে যুক্ত করা হয়েছে
+    // আপনার ফায়ারবেজ ডাটাবেজের সঠিক লিংক সরাসরি যুক্ত করা হয়েছে
     const databaseURL = "https://firebaseio.com";
 
     // ডাটা সেভ করার ফাংশন
@@ -66,15 +66,17 @@
         try {
             await fetch(databaseURL, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(memoData)
             });
             alert("মেমো সফলভাবে ডাটাবেজে সেভ হয়েছে!");
-            // ইনপুট ফিল্ড খালি করা
             document.getElementById('customerName').value = '';
             document.getElementById('itemName').value = '';
             document.getElementById('weight').value = '';
             document.getElementById('totalAmount').value = '';
-            loadMemos(); // লিস্ট আপডেট করা
+            loadMemos();
         } catch (error) {
             alert("ডাটা সেভ করতে সমস্যা হয়েছে। ইন্টারনেট কানেকশন চেক করুন।");
         }
@@ -109,7 +111,6 @@
         }
     }
 
-    // অ্যাপ চালু হলেই মেমো লোড হবে
     loadMemos();
 </script>
 

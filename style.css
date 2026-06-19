@@ -23,21 +23,23 @@ label {
 }
 input, select { 
     width: 100%; 
-    padding: 8px; 
+    padding: 10px; 
     margin-top: 5px; 
     box-sizing: border-box; 
     border: 1px solid #ccc; 
     border-radius: 4px; 
+    font-size: 15px;
 }
 button { 
     width: 100%; 
-    padding: 10px; 
+    padding: 12px; 
     background-color: #28a745; 
     color: white; 
     border: none; 
     border-radius: 4px; 
     margin-top: 15px; 
     font-size: 16px; 
+    font-weight: bold;
     cursor: pointer; 
 }
 button:hover { 
@@ -48,9 +50,49 @@ button:hover {
 }
 .memo-card { 
     background: #fff; 
-    padding: 10px; 
+    padding: 12px; 
     margin-bottom: 10px; 
     border-left: 5px solid #007bff; 
     border-radius: 4px; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+}
+
+/* মেমো কার্ডের ভেতরের লেখা ও টাইমিং */
+.memo-card p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+.memo-card .time {
+    font-size: 11px;
+    color: #888;
+    margin-top: 8px;
+}
+
+/* এডিট ও ডিলিট বাটনের ডিজাইন */
+.card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.edit-btn {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 6px 12px;
+    font-size: 13px;
+    margin-top: 0;
+}
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    font-size: 13px;
+    margin-top: 0;
+}
+.delete-btn:hover {
+    background-color: #bd2130;
 }

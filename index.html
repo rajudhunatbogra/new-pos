@@ -12,6 +12,9 @@
 <div class="container">
     <h2>জুয়েলারি পস (POS)</h2>
     
+    <!-- মেমো এডিট করার জন্য গোপন আইডি ট্র্যাক করার ঘর -->
+    <input type="hidden" id="memoId">
+    
     <label>গ্রাহকের নাম:</label>
     <input type="text" id="customerName" placeholder="নাম লিখুন">
 
@@ -24,8 +27,7 @@
     <label>মোট মূল্য (টাকা):</label>
     <input type="number" id="totalAmount" placeholder="0.00">
 
-   <button id="saveMemoBtn" onclick="saveMemo()">মেমো সেভ করুন</button>
-
+    <button id="saveMemoBtn" onclick="saveMemo()">মেমো সেভ করুন</button>
 
     <h3>সংরক্ষিত মেমো সমূহ (চিরস্থায়ী)</h3>
     <div id="memoContainer" class="memo-list">লোড হচ্ছে...</div>

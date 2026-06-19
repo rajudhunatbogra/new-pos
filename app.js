@@ -20,14 +20,14 @@ request.onerror = function() {
 
 // মেমো সেভ অথবা আপডেট করার ফাংশন
 function saveMemo() {
-    const name = document.getElementById('customerName').value;
-    const item = document.getElementById('itemName').value;
-    const weight = document.getElementById('weight').value;
-    const amount = document.getElementById('totalAmount').value;
+    const name = document.getElementById('customerName').value.trim();
+    const item = document.getElementById('itemName').value.trim();
+    const weight = document.getElementById('weight').value.trim();
+    const amount = document.getElementById('totalAmount').value.trim();
     const editId = document.getElementById('saveMemoBtn').getAttribute('data-edit-id');
 
-    if (!name || !item || !amount) {
-        alert("অনুগ্রহ করে সব তথ্য পূরণ করুন!");
+    if (!name || !amount) {
+        alert("অনুগ্রহ করে গ্রাহকের নাম এবং মোট মূল্য অবশ্যই লিখুন!");
         return;
     }
 
@@ -36,9 +36,9 @@ function saveMemo() {
 
     const memoData = {
         customerName: name,
-        itemName: item,
-        weight: weight,
-        totalAmount: amount,
+        itemName: item || 'নেই',
+        weight: weight || 'নেই',
+        totalAmount: parseFloat(amount),
         date: new Date().toLocaleString('bn-BD')
     };
 
@@ -91,14 +91,15 @@ function loadMemos() {
             // নতুন মেমোগুলো উপরে দেখানোর জন্য উল্টো করে সাজানো
             tempMemos.reverse().forEach(memo => {
                 container.innerHTML += `
-                    <div class="memo-card" style="border-left: 5px solid #28a745; margin-bottom: 12px; padding: 10px; background: #fff; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <p><strong>তারিখ:</strong> ${memo.date}</p>
-                        <p><strong>গ্রাহক:</strong> ${memo.customerName}</p>
-                        <p><strong>পণ্য:</strong> ${memo.itemName} (${memo.weight || 'ওজন নেই'})</p>
+                    <div class="memo-card">
+                        <p><strong>গ্রাহকের নাম:</strong> ${memo.customerName}</p>
+                        <p><strong>পণ্যের বিবরণ:</strong> ${memo.itemName}</p>
+                        <p><strong>ওজন:</strong> ${memo.weight}</p>
                         <p><strong>মোট মূল্য:</strong> ${memo.totalAmount} টাকা</p>
-                        <div style="margin-top: 10px; display: flex; gap: 10px;">
-                            <button onclick="editMemo(${memo.id}, '${memo.customerName}', '${memo.itemName}', '${memo.weight}', ${memo.totalAmount})" style="padding: 5px 10px; background: #ffc107; color: #000; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; width: auto; margin-top: 0;">এডিট করুন</button>
-                            <button onclick="deleteMemo(${memo.id})" style="padding: 5px 10px; background: #dc3545; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; width: auto; margin-top: 0;">ডিলিট</button>
+                        <p class="time">📅 ${memo.date}</p>
+                        <div class="card-actions">
+                            <button class="edit-btn" onclick="editMemo(${memo.id}, '${memo.customerName}', '${memo.itemName}', '${memo.weight}', ${memo.totalAmount})">এডিট করুন</button>
+                            <button class="delete-btn" onclick="deleteMemo(${memo.id})">ডিলিট</button>
                         </div>
                     </div>
                 `;
@@ -110,8 +111,8 @@ function loadMemos() {
 // এডিট করার জন্য ডাটা ইনপুট বক্সে পাঠানোর ফাংশন
 function editMemo(id, name, item, weight, amount) {
     document.getElementById('customerName').value = name;
-    document.getElementById('itemName').value = item;
-    document.getElementById('weight').value = weight;
+    document.getElementById('itemName').value = item === 'নেই' ? '' : item;
+    document.getElementById('weight').value = weight === 'নেই' ? '' : weight;
     document.getElementById('totalAmount').value = amount;
     
     const saveBtn = document.getElementById('saveMemoBtn');
